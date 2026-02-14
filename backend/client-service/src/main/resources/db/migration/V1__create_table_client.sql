@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS client(
+    id UUID PRIMARY KEY,
+    name VARCHAR(120) NOT NULL,
+    cpf VARCHAR(11) NOT NULL UNIQUE,
+    birthday DATE NOT NULL,
+    address VARCHAR(120) NOT NULL,
+    isActive BOOLEAN NOT NULL
+);

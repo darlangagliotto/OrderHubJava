@@ -3,7 +3,6 @@ package com.darlan.productservice.controller;
 import com.darlan.productservice.dto.ProductRequestDto;
 import com.darlan.productservice.dto.ProductResponseDto;
 import com.darlan.productservice.service.ProductService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/product")
-@Tag(name = "Produtos", description = "Operações de CRUD de produtos")
+@Tag(name = "Produto", description = "Operações de CRUD de produtos")
 public class ProductController {
     
     private final ProductService productService;
@@ -45,7 +44,7 @@ public class ProductController {
         return productService.getById(id);
     }
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProductResponseDto create(@Valid @RequestBody ProductRequestDto request) {        
         return productService.create(request);

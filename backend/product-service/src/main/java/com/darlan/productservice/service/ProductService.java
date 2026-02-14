@@ -33,14 +33,14 @@ public class ProductService {
         return toDto(product);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ProductResponseDto create(ProductRequestDto request) {
         Product product = new Product(request.name(), request.price());
         Product saved = productRepository.save(product);
         return toDto(saved);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ProductResponseDto update(UUID id, ProductRequestDto request) {
         Product product = findById(id);
         product.setName(request.name());
@@ -49,13 +49,12 @@ public class ProductService {
         return toDto(saved);
     }
 
-    @Transactional(readOnly = true)    
+    @Transactional
     public void delete(UUID id) {
         Product product = findById(id);
         productRepository.delete(product);
     }
 
-    @Transactional(readOnly = true)
     private Product findById(UUID id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
