@@ -1,0 +1,64 @@
+name: orderhub
+
+x-spring-db-common: &spring-db-common
+  SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
+  SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+  SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO:-validate}
+  SPRING_FLYWAY_ENABLED: ${SPRING_FLYWAY_ENABLED:-true}
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: orderhub-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - orderhub_pgdata:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  product-service:
+    build:
+      context: ../backend/product-service
+      dockerfile: Dockerfile
+    container_name: orderhub-product-service
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      <<: *spring-db-common
+      SPRING_PROFILES_ACTIVE: ${PRODUCT_SPRING_PROFILES_ACTIVE:-prod}
+      SERVER_PORT: ${PRODUCT_SERVER_PORT:-8081}
+      SPRING_DATASOURCE_URL: ${PRODUCT_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/productdb}
+    ports:
+      - "${PRODUCT_SERVER_PORT:-8081}:${PRODUCT_SERVER_PORT:-8081}"
+
+  client-service:
+    build:
+      context: ../backend/client-service
+      dockerfile: Dockerfile
+    container_name: orderhub-client-service
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      <<: *spring-db-common
+      SPRING_PROFILES_ACTIVE: ${CLIENT_SPRING_PROFILES_ACTIVE:-prod}
+      SERVER_PORT: ${CLIENT_SERVER_PORT:-8082}
+      SPRING_DATASOURCE_URL: ${CLIENT_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/clientdb}
+    ports:
+      - "${CLIENT_SERVER_PORT:-8082}:${CLIENT_SERVER_PORT:-8082}"
+
+volumes:
+  orderhub_pgdata:
