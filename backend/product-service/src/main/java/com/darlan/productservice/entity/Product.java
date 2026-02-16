@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name="product")
+@Table(name="products")
 public class Product {
 
     @Id
