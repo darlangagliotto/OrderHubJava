@@ -3,7 +3,7 @@ package com.darlan.clientservice.service;
 import com.darlan.clientservice.dto.ClientRequestDto;
 import com.darlan.clientservice.dto.ClientResponseDto;
 import com.darlan.clientservice.entity.Client;
-import com.darlan.clientservice.exception.ClientNotFoundException;
+import com.darlan.clientservice.exception.BusinessException;
 import com.darlan.clientservice.mapper.ClientMapper;
 import com.darlan.clientservice.repository.ClientRepository;
 
@@ -63,13 +63,12 @@ public class ClientService {
     @Transactional
     public void delete(UUID id) {
         Client client = findById(id);
-        client.setIsActive(false);
-        clientRepository.save(client);
+        client.deactivate();
     }
 
-    private Client findById(UUID id){ 
+    private Client findById(UUID id) {
         Client client = clientRepository.findById(id)
-            .orElseThrow(() -> new ClientNotFoundException(id));
+            .orElseThrow(() -> new BusinessException("Cliente não encontrado para o id: %s".formatted(id)));
         return client;
     }
 

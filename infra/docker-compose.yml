@@ -60,5 +60,22 @@ services:
     ports:
       - "${CLIENT_SERVER_PORT:-8082}:${CLIENT_SERVER_PORT:-8082}"
 
+   order-service:
+    build:
+      context: ../backend/order-service
+      dockerfile: Dockerfile
+    container_name: orderhub-order-service
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      <<: *spring-db-common
+      SPRING_PROFILES_ACTIVE: ${ORDER_SPRING_PROFILES_ACTIVE:-prod}
+      SERVER_PORT: ${ORDER_SERVER_PORT:-8083}
+      SPRING_DATASOURCE_URL: ${ORDER_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/orderdb}
+    ports:
+      - "${ORDER_SERVER_PORT:-8083}:${ORDER_SERVER_PORT:-8083}"
+
 volumes:
   orderhub_pgdata:

@@ -1,5 +1,7 @@
 package com.darlan.clientservice.entity;
 
+import com.darlan.clientservice.exception.BusinessException;
+
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -25,17 +27,17 @@ public class Client{
     private String address;
 
     @Column(nullable = false)
-    private Boolean isActive;
+    private boolean active;
 
     protected Client(){
     }
 
-    public Client(String name, LocalDate birthDay, String cpf, String address, Boolean isActive) {
+    public Client(String name, LocalDate birthDay, String cpf, String address, boolean active) {
         this.name = name;
         this.birthDay = birthDay;
         this.cpf = cpf;
         this.address = address;
-        this.isActive = isActive;
+        this.active = true;
     }
 
     public UUID getId() { return id; }
@@ -43,11 +45,17 @@ public class Client{
     public String getCpf() { return cpf; }
     public LocalDate getBirthDay() { return birthDay; }
     public String getAddress() { return address; }
-    public Boolean getIsActive() { return isActive; }
+    public Boolean isActive() { return active; }
 
-    public void setName(String name) { this.name = name; }
-    public void setCpf(String cpf) { this.cpf = cpf; }
-    public void setBirthDay(LocalDate birthDay) { this.birthDay = birthDay; }
-    public void setAddress(String address) { this.address = address; }
-    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public void changeName(String name) { this.name = name; }
+    public void changeCpf(String cpf) { this.cpf = cpf; }
+    public void changeBirthDay(LocalDate birthDay) { this.birthDay = birthDay; }
+    public void changeAddress(String address) { this.address = address; }
+
+    public void deactivate() { 
+        if (!this.active) {
+            throw new BusinessException("O cliente de id: %s já está inativo".formatted(id));
+        }
+        this.active = false; 
+    }
 }

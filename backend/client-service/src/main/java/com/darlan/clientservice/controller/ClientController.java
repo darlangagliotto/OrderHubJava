@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.UUID;
 
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequestMapping("api/client")
