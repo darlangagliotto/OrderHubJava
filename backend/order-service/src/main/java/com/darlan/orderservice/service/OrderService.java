@@ -4,6 +4,7 @@ import com.darlan.orderservice.application.port.ProductCatalogPort;
 import com.darlan.orderservice.dto.OrderItemRequestDto;
 import com.darlan.orderservice.dto.OrderRequestDto;
 import com.darlan.orderservice.dto.OrderResponseDto;
+import com.darlan.orderservice.dto.ProductSnapshotDto;
 import com.darlan.orderservice.entity.Order;
 import com.darlan.orderservice.entity.OrderItem;
 import com.darlan.orderservice.exception.BusinessException;
@@ -41,7 +42,7 @@ public class OrderService {
         Order order = new Order(request.clientId(), request.address());
 
         for (OrderItemRequestDto itemRequest : request.items()) {
-            ProductCatalogPort.ProductSnapshot product = productCatalogPort.getProduct((itemRequest.productId()));            
+            ProductSnapshotDto product = productCatalogPort.getProduct((itemRequest.productId()));
 
             if (product.stockQuantity() < itemRequest.quantity()) {
                 throw new BusinessException("Estoque insuficiente para o produto: " + itemRequest.productId());

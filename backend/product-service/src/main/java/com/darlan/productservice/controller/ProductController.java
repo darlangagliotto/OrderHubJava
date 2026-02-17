@@ -1,5 +1,6 @@
 package com.darlan.productservice.controller;
 
+import com.darlan.productservice.dto.DecreaseStockRequestDto;
 import com.darlan.productservice.dto.ProductRequestDto;
 import com.darlan.productservice.dto.ProductResponseDto;
 import com.darlan.productservice.service.ProductService;
@@ -53,6 +54,12 @@ public class ProductController {
     @PutMapping("{id}")    
     public ProductResponseDto update(@PathVariable UUID id, @Valid @RequestBody ProductRequestDto request) {
         return productService.update(id, request);
+    }
+
+    @PutMapping("/{id}/decrease-stock")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void decreaseStock(@PathVariable UUID id, @RequestBody DecreaseStockRequestDto request) {
+        productService.decreaseStock(id, request.quantity());
     }
 
     @DeleteMapping("/{id}")

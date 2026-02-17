@@ -1,6 +1,7 @@
 package com.darlan.orderservice.infra.client;
 
 import com.darlan.orderservice.application.port.ProductCatalogPort;
+import com.darlan.orderservice.dto.ProductSnapshotDto;
 import com.darlan.orderservice.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,7 @@ public class ProductCatalogRestClient implements ProductCatalogPort {
     }
 
     @Override
-    public ProductSnapshot getProduct(UUID productId) {
+    public ProductSnapshotDto getProduct(UUID productId) {
         try {
             ProductResponse response = restTemplate.getForObject(
                     baseUrl + "/{id}",
@@ -37,7 +38,7 @@ public class ProductCatalogRestClient implements ProductCatalogPort {
                 throw new BusinessException("Produto não encontrado: " + productId);
             }
 
-            return new ProductSnapshot(
+            return new ProductSnapshotDto(
                     response.id(),
                     response.price(),
                     response.stockQuantity()

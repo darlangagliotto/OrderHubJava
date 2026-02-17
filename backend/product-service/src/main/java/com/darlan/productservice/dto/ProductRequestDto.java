@@ -19,6 +19,9 @@ public record ProductRequestDto(
     @Schema(description = "Preço do produto", example = "4999.90")
     @NotNull(message = "O preço é obrigatório")
     @DecimalMin(value = "0.01", message = "O preço deve ser maior que zero")
-    BigDecimal price
+    BigDecimal price,
+
+    @Schema(description = "Quantidade do produto", example = "0")
+    Integer stockQuantty
 ) {
 }

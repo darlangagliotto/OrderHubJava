@@ -1,4 +1,4 @@
-package com.darlan.productservice.exception;
+package com.darlan.clientservice.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
