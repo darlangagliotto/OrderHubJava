@@ -39,7 +39,7 @@ public class ClientService {
 
     @Transactional(readOnly = true)
     public List<ClientResponseDto> getAllInactiveClients() {
-        return clientRepository.findByIsActiveFalse()
+        return clientRepository.findByActiveFalse()
         .stream()
         .map(clientMapper::toDto)
         .toList();
